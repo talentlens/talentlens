@@ -61,6 +61,9 @@ fetchConcertoData <- function(dbname, host, user, password) {
   suppressWarnings(candidate_responses$correct <- as.numeric(candidate_responses$correct))
   suppressWarnings(candidate_responses$time_taken <- as.numeric(candidate_responses$time_taken))
 
+  #Make sure session_id is character
+  suppressWarnings(candidate_responses$session_id <- as.character(candidate_responses$session_id))
+
   #Get last response to each item
   last_responses <- candidate_responses %>%
     dplyr::arrange(desc(id)) %>%
