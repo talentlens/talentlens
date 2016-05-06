@@ -33,7 +33,7 @@ Boolean value - if TRUE (default), all candidate information from the server (ta
 }
 \value{
 
-  \item{complete_data }{A dataframe containing both demographic information and item scores from the concerto test.}
+  \item{complete_data }{A dataframe containing both demographic information and item scores from the concerto test. If you stored this in a dataframe called \code{df}, and you wish to save this as a .csv file in your working directory, type \code{write.csv(df, file = "df.csv", na = "", row.names = FALSE)} in the console and press Enter.}
 
 }
 \references{
