@@ -4,10 +4,11 @@
 
 #Function to grab data from concerto
 #Input: strings database name, host (IP), user & password
+#backup - if TRUE (default), the summary and response data will be saved to wd
 #Output: Data frame with demographic info and item scores
 #Writes 2 csv files in wd: demographic data and item responses
 
-fetchConcertoData <- function(dbname, host, user, password) {
+fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
   #Requires libraries RMySQL, dplyr & tidyr
 
   #Fetch data --------------------------------------------------
@@ -42,15 +43,18 @@ fetchConcertoData <- function(dbname, host, user, password) {
   #Close connection
   suppressWarnings(RMySQL::dbDisconnect(con))
 
-  #Write raw data to csv
-  write.csv(candidate_summary,
-            file = paste0(dbname, "_summary_", Sys.Date(), ".csv"),
-            row.names = FALSE, na = "")
-  write.csv(candidate_responses,
-            file = paste0(dbname, "_responses_", Sys.Date(), ".csv"),
-            row.names = FALSE, na = "")
+  #Write backup data to csv in the working directory
+  if (backup) {
+    write.csv(candidate_summary,
+              file = paste0(dbname, "_summary_", Sys.Date(), ".csv"),
+              row.names = FALSE, na = "")
+    write.csv(candidate_responses,
+              file = paste0(dbname, "_responses_", Sys.Date(), ".csv"),
+              row.names = FALSE, na = "")
 
-  print(paste("Done! Data is saved in directory", getwd()))
+    print(paste("Done! Data is saved in directory", getwd()))
+  }
+
 
   #Data processing ----------------------------------------------------
 
