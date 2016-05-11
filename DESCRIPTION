@@ -8,4 +8,4 @@ Maintainer: <morgan.strom@pearson.com>
 Description: Functions for test scoring, theta estimation etc.
 License: No licence
 LazyData: TRUE
-Depends: dplyr, tidyr, catR, RMySQL
+Depends: dplyr, tidyr, catR, psych, RMySQL

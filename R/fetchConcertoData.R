@@ -30,6 +30,9 @@ fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
     candidate_responses <- rbind(candidate_responses, chunk)
   }
 
+  #Clear result set
+  RMySQL::dbClearResult(res)
+
   #Get summaries
   res <- RMySQL::dbSendQuery(con, "select * from candidate_summary")
 
@@ -40,8 +43,11 @@ fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
     candidate_summary <- rbind(candidate_summary, chunk)
   }
 
+  #Clear result set
+  RMySQL::dbClearResult(res)
+
   #Close connection
-  suppressWarnings(RMySQL::dbDisconnect(con))
+  RMySQL::dbDisconnect(con)
 
   #Write backup data to csv in the working directory
   if (backup) {
@@ -69,11 +75,23 @@ fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
   suppressWarnings(candidate_responses$session_id <- as.character(candidate_responses$session_id))
   suppressWarnings(candidate_summary$session_id <- as.character(candidate_summary$session_id))
 
-  #Get last response to each item
+  #Get last, not NA, response to each item
   last_responses <- candidate_responses %>%
+    dplyr::filter(!is.na(response)) %>%
     dplyr::arrange(desc(id)) %>%
     dplyr::group_by(session_id) %>%
-    distinct(item_id)
+    dplyr::distinct(item_id)
+
+  #Get unique session_id in candidate_summary
+  dup <- duplicated(candidate_summary$session_id)
+  if (any(dup)) {
+
+    warning(paste("Dropping duplicated session_id in the database:",
+                  candidate_summary$session_id[dup]))
+
+    candidate_summary <- candidate_summary[!dup,]
+
+  }
 
   #Get score matrix
   score_matrix <- last_responses %>%
@@ -81,7 +99,7 @@ fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
     tidyr::spread(key = item_id, value = correct)
 
   #Merge tables
-  complete_data <- inner_join(candidate_summary, score_matrix,
+  complete_data <- dplyr::inner_join(candidate_summary, score_matrix,
                               by = c("session_id" = "session_id"))
 
   print("Done!")

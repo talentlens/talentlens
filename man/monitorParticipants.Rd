@@ -1,14 +1,14 @@
-\name{fetchConcertoData}
-\alias{fetchConcertoData}
+\name{monitorParticipants}
+\alias{monitorParticipants}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Function to fetch data from Concerto
+Function to monitor participants from MTurk projects
 }
 \description{
-Returns candidate scores and demographics in a data frame format
+Provides MTurk Worker ID along with number of attempted items and total time for completion (in seconds).
 }
 \usage{
-fetchConcertoData(dbname, host, user, password, backup = TRUE)
+monitorParticipants(dbname, host, user, password)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,23 +24,18 @@ String containing the user name for accessing the database. To get access to thi
   \item{password}{
 String containing the password for accessing the database. To get access to this information, please email the author of this package.
 }
-  \item{backup}{
-Boolean value - if TRUE (default), all candidate information from the server (tables candidate_summary and candidate_responses) will be stored as .csv files in the working directory.
-}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-
-  \item{complete_data }{A dataframe containing both demographic information and item scores from the concerto test. If you stored this in a dataframe called \code{df}, and you wish to save this as a .csv file in your working directory, type \code{write.csv(df, file = "df.csv", na = "", row.names = FALSE)} in the console and press Enter.}
-
+Data frame containing the columns \code{session_id}, \code{worker_id}, \code{attempted} and \code{total_time}.
 }
 \references{
 %% ~put references to the literature/web site here ~
 }
 \author{
-Morgan Strom, TalentLens UK
+Morgan Strom
 }
 \note{
 %%  ~~further notes~~
@@ -56,5 +51,5 @@ Morgan Strom, TalentLens UK
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~IO }% __ONLY ONE__ keyword per line
+\keyword{ ~IO }
 \keyword{ ~misc }
