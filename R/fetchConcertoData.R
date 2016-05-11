@@ -87,7 +87,7 @@ fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
   if (any(dup)) {
 
     warning(paste("Dropping duplicated session_id in the database:",
-                  candidate_summary$session_id[dup]))
+                  candidate_summary$session_id[dup], "\n"))
 
     candidate_summary <- candidate_summary[!dup,]
 
