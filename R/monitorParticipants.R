@@ -22,7 +22,7 @@ monitorParticipants <- function(dbname, host, user, password) {
     "SELECT b.session_id, a.worker_id, a.ip,
      COUNT(distinct(b.item_id)) as attempted,
      SUM(b.time_taken) as total_time
-     FROM candidate_summary a LEFT JOIN candidate_responses b
+     FROM candidate_summary a INNER JOIN candidate_responses b
      ON a.session_id=b.session_id
      GROUP BY b.session_id;")
 
