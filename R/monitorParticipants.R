@@ -19,7 +19,7 @@ monitorParticipants <- function(dbname, host, user, password) {
 
   #Query number of attempted items, and total time taken per session_id
   res <- RMySQL::dbSendQuery(con,
-    "SELECT b.session_id, a.worker_id, a.ip,
+    "SELECT b.session_id, a.worker_id, a.timestamp,
      COUNT(distinct(b.item_id)) as attempted,
      SUM(b.time_taken) as total_time
      FROM candidate_summary a INNER JOIN candidate_responses b

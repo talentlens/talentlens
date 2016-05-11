@@ -5,7 +5,7 @@
 Function to monitor participants from MTurk projects
 }
 \description{
-Provides MTurk Worker ID along with number of attempted items and total time for completion (in seconds).
+Provides MTurk Worker ID along with time of completion, number of attempted items and total time for completion (in seconds).
 }
 \usage{
 monitorParticipants(dbname, host, user, password)
@@ -29,7 +29,7 @@ String containing the password for accessing the database. To get access to this
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-Data frame containing the columns \code{session_id}, \code{worker_id}, \code{attempted} and \code{total_time}.
+Data frame containing the columns \code{session_id}, \code{worker_id}, \code{timestamp}, \code{attempted} and \code{total_time}.
 }
 \references{
 %% ~put references to the literature/web site here ~
