@@ -98,9 +98,15 @@ fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
     dplyr::select(session_id, item_id, correct) %>%
     tidyr::spread(key = item_id, value = correct)
 
+  #Calculate total raw score and number of items attempted
+  score_matrix$n_attempted <- apply(score_matrix[, -1], 1, function(x) sum(!is.na(x)))
+  score_matrix$raw_score <- rowSums(score_matrix[, -1], na.rm = TRUE)
+
   #Merge tables
   complete_data <- dplyr::inner_join(candidate_summary, score_matrix,
                               by = c("session_id" = "session_id"))
+
+
 
   print("Done!")
 
