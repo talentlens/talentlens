@@ -15,6 +15,11 @@
 
 balancer <- function(f, p, silent = TRUE) {
 
+  if(!is.factor(f)) {
+    print("Converting to factor class")
+    f <- factor(f)
+  }
+
   #Find the name of the most frequent factor level
   largest <- names(which.max(table(f)))
 
