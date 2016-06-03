@@ -104,6 +104,17 @@ fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
   #Append to score matrix
   score_matrix <- cbind(score_matrix, n_attempted, raw_score)
 
+  #Get time matrix
+  time_matrix <- last_responses %>%
+    dplyr::select(session_id, item_id, time_taken) %>%
+    tidyr::spread(key = item_id, value = time_taken)
+
+  #Calculate total time spent on items (minutes)
+  total_time <- data.frame(session_id = time_matrix$session_id,
+                           time_min = rowSums(time_matrix[, -1], na.rm = TRUE) / 60)
+  #Append to score matrix
+  score_matrix <- dplyr::left_join(score_matrix, total_time, by = c("session_id" = "session_id"))
+
   #Merge tables
   complete_data <- dplyr::inner_join(candidate_summary, score_matrix,
                               by = c("session_id" = "session_id"))
