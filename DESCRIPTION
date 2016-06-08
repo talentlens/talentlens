@@ -1,11 +1,11 @@
 Package: talentlens
 Type: Package
 Title: R package for team TalentLens
-Version: 0.1
-Date: 2016-05-03
+Version: 0.2
+Date: 2016-06-08
 Author: Morgan Strom
 Maintainer: <morgan.strom@pearson.com>
 Description: Functions for test scoring, theta estimation etc.
-License: No licence
+License: None
 LazyData: TRUE
-Depends: dplyr, tidyr, catR, psych, RMySQL
+Depends: dplyr, tidyr, catR, psych, RMySQL, ltm

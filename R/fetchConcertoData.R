@@ -104,10 +104,10 @@ fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
   #Append to score matrix
   score_matrix <- cbind(score_matrix, n_attempted, raw_score)
 
-  #Get total time spent on all responses
+  #Get total time spent on all responses (in minutes)
   total_time <- candidate_responses %>%
     dplyr::group_by(session_id) %>%
-    dplyr::summarise(time_min = sum(time_taken, na.rm = TRUE))
+    dplyr::summarise(time_min = sum(time_taken, na.rm = TRUE) / 60)
 
   #Append to score matrix
   score_matrix <- dplyr::left_join(score_matrix, total_time, by = c("session_id" = "session_id"))

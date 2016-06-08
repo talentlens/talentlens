@@ -18,13 +18,30 @@ monitorParticipants <- function(dbname, host, user, password) {
                            dbname = dbname)
 
   #Query number of attempted items, and total time taken per session_id
+  #NOTE: doesn't filter out repeated session_ids in candidate_summary
+  #when calculating time_taken
   res <- RMySQL::dbSendQuery(con,
     "SELECT b.session_id, a.worker_id, a.timestamp,
      COUNT(distinct(b.item_id)) as attempted,
-     SUM(b.time_taken) as total_time
+     SUM(b.time_taken) / 60 as total_time
      FROM candidate_summary a INNER JOIN candidate_responses b
      ON a.session_id=b.session_id
      GROUP BY b.session_id;")
+
+  #Query number of attempted items and total time taken (min) per session_id
+  #Using an inner query grouping by both session_id and item_id
+  #NOTE: only counts the first time an item was reviewed
+  #res <- RMySQL::dbSendQuery(con,
+  #  "SELECT session_id, worker_id, timestamp,
+  #   COUNT(distinct(item_id)) as attempted,
+  #   SUM(time_taken) / 60 as total_time
+  #   FROM
+  #   (SELECT b.session_id, a.worker_id, a.timestamp, b.item_id, b.time_taken
+  #   FROM candidate_summary a INNER JOIN candidate_responses b
+  #   ON a.session_id=b.session_id
+  #   GROUP BY b.session_id, b.item_id)
+  #   T1
+  #   GROUP BY session_id;")
 
   #Fetch data
   monitor <- RMySQL::dbFetch(res, -1)
