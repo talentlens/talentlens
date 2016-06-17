@@ -2,7 +2,7 @@
 \alias{targetUKCensus}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Function to calculate target proportions from UK Census data
+Function to calculate target proportions from UK Census data 2011
 }
 \description{
 Returns a dataframe with 60 rows, with target proportions for each possible subgroup with regards to age, gender, ethnicity and education level

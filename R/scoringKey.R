@@ -10,6 +10,9 @@
 #List containing scoring key
 scoringKey <- function(key.df) {
 
+  #Make sure that the key column is in character format
+  key.df$key <- as.character(key.df$key)
+
   #Identify scoring ranges for open form items
   range <- grepl("RANGE:", key.df$key)
 
