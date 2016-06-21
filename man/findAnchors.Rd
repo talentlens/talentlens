@@ -8,7 +8,9 @@ Function to suggest optimal anchor items from a score matrix
 This function selects optimal anchor items in two steps: first, based on CTT analyses (proportion of participants answering the item correctly and item-total biserial correlation) and second, based on a chi-square test of item fit under the chosen IRT model.
 }
 \usage{
-findAnchors(score_matrix, model = c("rasch", "2pl"), min_cor = 0.2, min_p = 0.1, max_p = 0.9, verbose = FALSE)
+findAnchors(score_matrix, model = c("rasch", "2pl"),
+bagging = FALSE, R = NA,
+min_cor = 0.2, min_p = 0.1, max_p = 0.9, verbose = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,6 +19,12 @@ findAnchors(score_matrix, model = c("rasch", "2pl"), min_cor = 0.2, min_p = 0.1,
 }
   \item{model}{
     The IRT model to use for parameter fitting. Either "rasch" (for smaller sample sizes) or "2pl" (for larger sample sizes)
+}
+  \item{bagging}{
+    If TRUE, the parameters will be estimated using bagging (see package baggedParams). If FALSE, parameters will be estimated using one single run of the item fitting algorithm.
+}
+  \item{R}{
+    For bagging, this is the number of bootstrap iterations.
 }
   \item{min_cor}{
     The minimum allowed item-total biserial correlation. Default: 0.2
@@ -35,7 +43,7 @@ findAnchors(score_matrix, model = c("rasch", "2pl"), min_cor = 0.2, min_p = 0.1,
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A two-column matrix of item parameters for the suggested anchor items. The rows are named after the item ids, and the columns are named "Dffclt" (difficulty parameter b) and "Dscrmn" (discrimination parameter a).
+A two-column matrix of item parameters for the suggested anchor items. The rows are named after the item ids, and the columns are named "b" (difficulty parameter) and "a" (discrimination parameter).
 }
 \references{
 %% ~put references to the literature/web site here ~

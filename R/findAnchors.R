@@ -8,6 +8,7 @@
 #Output: item parameters for the best items or a list of 2
 
 findAnchors <- function(score_matrix, model = c("rasch", "2pl"),
+                        bagging = FALSE, R = NA,
                         min_cor = 0.2, min_p = 0.1, max_p = 0.9,
                         verbose = FALSE) {
 
@@ -63,37 +64,48 @@ findAnchors <- function(score_matrix, model = c("rasch", "2pl"),
 
   #IRT analyses -------------------------------
 
-  #Rasch model
-  if (model == "rasch") {
-    if (verbose) cat("\nFitting IRT parameters:\n")
-    fit <- ltm::rasch(score_matrix_, IRT.param = TRUE,
-                      control = list(iter.qN = 150, GHk = 21, verbose = verbose))
+  if (!bagging) {
+    #Rasch model
+    if (model == "rasch") {
+      if (verbose) cat("\nFitting IRT parameters:\n")
+      fit <- ltm::rasch(score_matrix_, IRT.param = TRUE,
+                        control = list(iter.qN = 150, GHk = 21, verbose = verbose))
 
-  #2PL
-  } else if (model == "2pl") {
-    if (verbose) cat("\nFitting IRT parameters:\n")
-    fit <- ltm::ltm(formula = score_matrix_ ~ z1, IRT.param = TRUE,
-                    control = list(iter.em = 40, GHk = 21, verbose = verbose))
+      #2PL
+    } else if (model == "2pl") {
+      if (verbose) cat("\nFitting IRT parameters:\n")
+      fit <- ltm::ltm(formula = score_matrix_ ~ z1, IRT.param = TRUE,
+                      control = list(iter.em = 40, GHk = 21, verbose = verbose))
+
+    } else {
+      stop("Please choose IRT model")
+    }
+
+    #Indicate items with bad fit
+    items <- item.fit(fit)
+    bad_fit <- items$p.values < 0.05
+    drop$bad_fit <- items$Tobs[bad_fit]
+
+    if (verbose & length(drop$bad_fit > 0)) {
+      cat("\nNOTE: Items not fitting the model:\n")
+      for(i in 1:length(drop$bad_fit)) cat(paste0("\t", names(drop$bad_fit)[i], "\n"))
+    }
+
+    #Anchor item coefficients
+    anchors <- coefficients(fit)
+    names(anchors) <- c("b", "a")
 
   } else {
-    stop("Please choose IRT model")
-  }
 
-  #Plot IIC
-  plot(fit)
+    if(is.na(R)) R <- 199
 
-  #Indicate items with bad fit
-  items <- item.fit(fit)
-  bad_fit <- items$p.values < 0.05
-  drop$bad_fit <- items$Tobs[bad_fit]
+    #Bagged IRT parameters
+    anchors <- baggedParams(score_matrix_, R, model)
 
-  if (verbose & length(drop$bad_fit > 0)) {
-    cat("\nNOTE: Items not fitting the model (chi-square test p < 0.05):\n")
-    for(i in 1:length(drop$bad_fit)) cat(paste0("\t", names(drop$bad_fit)[i], "\n"))
   }
 
   #Return optimal anchor items -------------------
-  anchors <- coefficients(fit)
+
   return(anchors)
 
 }
