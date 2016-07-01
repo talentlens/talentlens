@@ -12,12 +12,17 @@ findAnchors <- function(score_matrix, model = c("rasch", "2pl"),
                         min_cor = 0.2, min_p = 0.1, max_p = 0.9,
                         verbose = FALSE) {
 
+  #Check if score_matrix has any missing values
+  if (any(is.na(score_matrix))) {
+    warning("There are missing values in score_matrix.")
+  }
+
   #CTT analyses -------------------------------
 
   drop <- list()
 
   #Percent correct (items)
-  p <- colMeans(score_matrix)
+  p <- colMeans(score_matrix, na.rm=TRUE)
 
   easy <- p >= max_p
   drop$easy <- p[easy] #Items with high proportions of correct answers
@@ -93,7 +98,7 @@ findAnchors <- function(score_matrix, model = c("rasch", "2pl"),
 
     #Anchor item coefficients
     anchors <- coefficients(fit)
-    names(anchors) <- c("b", "a")
+    colnames(anchors) <- c("b", "a")
 
   } else {
 
