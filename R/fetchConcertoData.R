@@ -8,7 +8,7 @@
 #Output: Data frame with demographic info and item scores
 #Writes 2 csv files in wd: demographic data and item responses
 
-fetchConcertoData <- function(dbname, host, user, password, backup = TRUE) {
+fetchConcertoData <- function(dbname, host, user, password, backup = FALSE) {
   #Requires libraries RMySQL, dplyr & tidyr
 
   #Fetch data --------------------------------------------------
