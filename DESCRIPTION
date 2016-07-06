@@ -6,6 +6,6 @@ Date: 2016-06-08
 Author: Morgan Strom
 Maintainer: <morgan.strom@pearson.com>
 Description: Functions for test scoring, theta estimation etc.
-License: None
+License: No license
 LazyData: TRUE
 Depends: dplyr, tidyr, catR, psych, RMySQL, ltm

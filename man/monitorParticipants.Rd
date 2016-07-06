@@ -5,7 +5,7 @@
 Function to monitor participants from MTurk projects
 }
 \description{
-Provides MTurk Worker ID along with time of completion, number of attempted items and total time for completion (in seconds).
+Provides MTurk Worker ID along with time of completion, number of attempted items and total time for completion (in minutes).
 }
 \usage{
 monitorParticipants(dbname, host, user, password)

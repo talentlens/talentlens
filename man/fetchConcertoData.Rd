@@ -8,7 +8,7 @@ Function to fetch data from Concerto
 Returns candidate scores and demographics in a data frame format
 }
 \usage{
-fetchConcertoData(dbname, host, user, password, backup = TRUE)
+fetchConcertoData(dbname, host, user, password, backup = FALSE, fetch = "scores")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,6 +26,9 @@ String containing the password for accessing the database. To get access to this
 }
   \item{backup}{
 Boolean value - if TRUE (default), all candidate information from the server (tables candidate_summary and candidate_responses) will be stored as .csv files in the working directory.
+}
+  \item{fetch}{
+String defining what data to fetch. If "scores" (default), the data will contain the scores matrix with 1 representing a correct response and 0 representing an incorrect response. If "responses", the data will instead contain participants' responses to the items.
 }
 }
 \details{

@@ -1,14 +1,7 @@
 #Functions to estimate ability using EAP algorithm
+#Author: Morgan Strom
+#Date: 2016-07-06
 
-#Inputs:
-#item responses "x" (vector with correct responses coded as 1 and incorrect responses as 0)
-#NOTE columns need to be named with item names
-#item parameters "params" (data frame with unique item names and item parameters on each row)
-#NOTE columns need to be named "id", "a", "b" and "c"
-#Scaling constant D (Defaults to 1.702 for normal ogive model)
-
-#Outputs:
-#Estimated theta for the response vector "theta"
 eap <- function(x, params, D=1.702) {
 
   #Define item parameters
@@ -34,7 +27,7 @@ eap <- function(x, params, D=1.702) {
 
   #1. Compute prior distribution with 33 quadrature points
   theta <- seq(from=-4, to=4, by=0.25)
-  prior <- dnorm(theta, mean=0, sd=1)
+  prior <- stats::dnorm(theta, mean=0, sd=1)
 
 
   #2. Compute probability of correctly answering the items
@@ -115,59 +108,5 @@ eap <- function(x, params, D=1.702) {
 
   #Return ability estimate
   ability
-
-}
-
-
-
-#Wrapper function for catR function "eapEst"
-#Input: score vector x, item parameter dataframe params,
-#scaling constant D
-#Output: theta estimate
-
-wrap_eapEst <- function(x, params, D=1.702) {
-
-  #Identify answered items
-  items <- names(which(!is.na(x)))
-
-  #Find indices for these items in "params"
-  i_items <- which(params$id %in% items)
-
-  #Extract only answered items
-  x <- x[i_items]
-
-  #Convert item parameters to matrix
-  it <- as.matrix(params[i_items, 3:5])
-  it <- cbind(it, d=1) #Add fourth parameter d=1
-
-  #Estimate theta
-  theta <- eapEst(it = it, x = x, D = D)
-
-  theta
-}
-
-#Wrapper function for catR function "eapSem"
-#Input: score vector x, theta estimate theta, item parameter data frame params,
-#scaling constant D
-#Output: estimated standard error
-wrap_eapSem <- function(x, theta, params, D=1.702) {
-
-  #Identify answered items in vector x
-  items <- names(which(!is.na(x)))
-
-  #Find indices for these items in "params"
-  i_items <- which(params$id %in% items)
-
-  #Retain only answered items
-  x <- x[i_items]
-
-  #Convert item parameters to matrix
-  it <- as.matrix(params[i_items, 3:5])
-  it <- cbind(it, d=1) #Add fourth parameter d=1
-
-  #Estimate SEM
-  sem <- eapSem(thEst = theta, it = it, x = x, D = D)
-
-  sem
 
 }

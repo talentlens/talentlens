@@ -8,7 +8,8 @@
 #Output: Data frame with demographic info and item scores
 #Writes 2 csv files in wd: demographic data and item responses
 
-fetchConcertoData <- function(dbname, host, user, password, backup = FALSE) {
+fetchConcertoData <- function(dbname, host, user, password,
+                              backup = FALSE, fetch = "scores") {
   #Requires libraries RMySQL, dplyr & tidyr
 
   #Fetch data --------------------------------------------------
@@ -93,16 +94,24 @@ fetchConcertoData <- function(dbname, host, user, password, backup = FALSE) {
 
   }
 
-  #Get score matrix
-  score_matrix <- last_responses %>%
-    dplyr::select(session_id, item_id, correct) %>%
-    tidyr::spread(key = item_id, value = correct)
+  #If fetch == scores, get score matrix
+  if (fetch == "scores") {
+    score_matrix <- last_responses %>%
+      dplyr::select(session_id, item_id, correct) %>%
+      tidyr::spread(key = item_id, value = correct)
 
-  #Calculate total raw score and number of items attempted
-  n_attempted <- apply(score_matrix[, -1], 1, function(x) sum(!is.na(x)))
-  raw_score <- rowSums(score_matrix[, -1], na.rm = TRUE)
-  #Append to score matrix
-  score_matrix <- cbind(score_matrix, n_attempted, raw_score)
+    #Calculate total raw score and number of items attempted
+    n_attempted <- apply(score_matrix[, -1], 1, function(x) sum(!is.na(x)))
+    raw_score <- rowSums(score_matrix[, -1], na.rm = TRUE)
+    #Append to score matrix
+    score_matrix <- cbind(score_matrix, n_attempted, raw_score)
+
+  #If fetch == responses, get response matrix instead
+  } else if (fetch == "responses") {
+    score_matrix <- last_responses %>%
+      dplyr::select(session_id, item_id, response) %>%
+      tidyr::spread(key = item_id, value = response)
+  }
 
   #Get total time spent on all responses (in minutes)
   total_time <- candidate_responses %>%
