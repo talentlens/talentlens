@@ -21,7 +21,6 @@ scoreDataFrame <- function(df, key) {
          Type '?scoringKey' for help.")
   }
 
-  print(key)
   #Initiate matrix to store scores
   score_matrix <- matrix(nrow = nrow(df), ncol = length(key))
 
