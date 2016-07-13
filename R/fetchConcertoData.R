@@ -101,10 +101,8 @@ fetchConcertoData <- function(dbname, host, user, password,
       tidyr::spread(key = item_id, value = correct)
 
     #Calculate total raw score and number of items attempted
-    n_attempted <- apply(score_matrix[, -1], 1, function(x) sum(!is.na(x)))
-    raw_score <- rowSums(score_matrix[, -1], na.rm = TRUE)
-    #Append to score matrix
-    score_matrix <- cbind(score_matrix, n_attempted, raw_score)
+    score_matrix$n_attempted <- apply(score_matrix[, -1], 1, function(x) sum(!is.na(x)))
+    score_matrix$raw_score <- rowSums(score_matrix[, -1], na.rm = TRUE)
 
   #If fetch == responses, get response matrix instead
   } else if (fetch == "responses") {
