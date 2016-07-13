@@ -81,7 +81,7 @@ fetchConcertoData <- function(dbname, host, user, password,
     dplyr::filter(!is.na(response)) %>%
     dplyr::arrange(desc(id)) %>%
     dplyr::group_by(session_id) %>%
-    dplyr::distinct(item_id)
+    dplyr::distinct(item_id, .keep_all = TRUE)
 
   #Get unique session_id in candidate_summary
   dup <- duplicated(candidate_summary$session_id)
